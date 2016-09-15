@@ -87,6 +87,7 @@ gulp.task('default', ['sass', 'jade', 'compress']);
 //watch
 gulp.task('watch', function(){
 browserSync.init({
+   port: 8890,
      server: {
          baseDir: "./dest/"
      }
