@@ -10,6 +10,8 @@ var cache = require('gulp-cached');
 var browserSync = require('browser-sync');
 var htmlv = require( 'gulp-html-validator' );
 var notify = require('gulp-notify');
+var autoprefixer = require("gulp-autoprefixer");
+var imagemin = require('gulp-imagemin');
 
 var errorHandler = function(error) {
   var err = error;
@@ -28,6 +30,10 @@ gulp.task('sass', function () {
     }))
     .pipe(cache())
     .pipe(sass())
+    .pipe(autoprefixer({
+            browsers: ["last 2 versions", "ie >= 9", "Android >= 4","ios_saf >= 8"],
+            cascade: false
+    }))
     .pipe(gulp.dest('./src/css/'))
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./dest'))
@@ -80,8 +86,15 @@ gulp.task('compress', function() {
     .pipe(gulp.dest('./dest/common/js/'));
 });
 
+gulp.task('imagemin', function(){
+	gulp.src('./dest/**/*.+(jpg|jpeg|png|gif|svg)')
+		.pipe(imagemin())
+		.pipe(gulp.dest('./dest/'));
+});
 
-gulp.task('default', ['sass', 'jade', 'compress']);
+
+
+gulp.task('default', ['sass', 'jade', 'compress', 'imagemin']);
 
 
 //watch
@@ -95,6 +108,7 @@ browserSync.init({
     var w_sass = gulp.watch('./src/sass/*.scss', ['sass']);
     var w_jade = gulp.watch('./src/jade/**/*.jade', ['jade']);
     var w_uglify = gulp.watch('./src/js/*.js', ['compress']);
+    var w_image = gulp.watch('./dest/**/*.+(jpg|jpeg|png|gif|svg)', ['imagemin']);
 
     w_sass.on('change', function(event){
         console.log('CSS File ' + event.path + ' was ' + event.type + ', running task sass...');

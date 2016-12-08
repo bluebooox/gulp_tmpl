@@ -11,9 +11,11 @@
   "devDependencies": {
     "browser-sync": "^2.11.1",
     "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.1",
     "gulp-cached": "^1.1.0",
     "gulp-html-validator": "0.0.5",
     "gulp-iconv": "0.0.1",
+    "gulp-imagemin": "^3.1.1",
     "gulp-intercept": "^0.1.0",
     "gulp-jade": "^1.1.0",
     "gulp-load-plugins": "^0.10.0",
