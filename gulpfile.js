@@ -12,6 +12,8 @@ var htmlv = require( 'gulp-html-validator' );
 var notify = require('gulp-notify');
 var autoprefixer = require("gulp-autoprefixer");
 var imagemin = require('gulp-imagemin');
+var sourcemaps = require('gulp-sourcemaps');
+var csso = require('gulp-csso');
 
 var errorHandler = function(error) {
   var err = error;
@@ -24,17 +26,19 @@ var errorHandler = function(error) {
 };
 
 gulp.task('sass', function () {
-  gulp.src('./sass/*.scss', !'./sass/_modules/*.scss')
+  gulp.src('./src/sass/*.scss', !'./src/sass/_modules/*.scss')
     .pipe( $.plumber({
     errorHandler: errorHandler
     }))
     .pipe(cache())
+    .pipe( sourcemaps.write('.'))
     .pipe(sass())
     .pipe(autoprefixer({
             browsers: ["last 2 versions", "ie >= 9", "Android >= 4","ios_saf >= 8"],
             cascade: false
     }))
     .pipe(gulp.dest('./src/css/'))
+    .pipe(csso())
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./dest'))
     .pipe(browserSync.stream())
