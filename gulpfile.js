@@ -5,7 +5,7 @@ var notifier = require('node-notifier');
 var rename = require('gulp-rename');
 var sass = require('gulp-sass');
 var uglify = require('gulp-uglify');
-var jade = require('gulp-jade');
+var pug = require('gulp-pug');
 var cache = require('gulp-cached');
 var browserSync = require('browser-sync');
 var htmlv = require( 'gulp-html-validator' );
@@ -14,6 +14,7 @@ var autoprefixer = require("gulp-autoprefixer");
 var imagemin = require('gulp-imagemin');
 var sourcemaps = require('gulp-sourcemaps');
 var csso = require('gulp-csso');
+var pug = require('gulp-pug');
 
 var errorHandler = function(error) {
   var err = error;
@@ -51,18 +52,18 @@ gulp.task('sass', function () {
 
 });
 
-gulp.task('jade', function () {
-  gulp.src(['./src/jade/*.jade','./src/jade/**/*.jade','!./src/jade/**/_*.jade'])
+gulp.task('pug', function () {
+  gulp.src(['./src/pug/*.pug','./src/pug/**/*.pug','!./src/pug/**/_*.pug'])
   .pipe( $.plumber({
   errorHandler: errorHandler
    }))
    .pipe(cache())
-   .pipe(jade({
+   .pipe(pug({
     pretty: true
    }))
     .pipe(gulp.dest('./dest'))
     .pipe(notify({
-            title: 'Jadeをコンパイルしました。',
+            title: 'pugをコンパイルしました。',
             message: new Date(),
             sound: 'Glass',
             // icon: 'logo.gif'
@@ -91,14 +92,14 @@ gulp.task('compress', function() {
 });
 
 gulp.task('imagemin', function(){
-	gulp.src('./dest/**/*.+(jpg|jpeg|png|gif|svg)')
-		.pipe(imagemin())
-		.pipe(gulp.dest('./dest/'));
+    gulp.src('./dest/**/*.+(jpg|jpeg|png|gif|svg)')
+        .pipe(imagemin())
+        .pipe(gulp.dest('./dest/'));
 });
 
 
 
-gulp.task('default', ['sass', 'jade', 'compress', 'imagemin']);
+gulp.task('default', ['sass', 'pug', 'compress', 'imagemin']);
 
 
 //watch
@@ -110,7 +111,7 @@ browserSync.init({
      }
  });
     var w_sass = gulp.watch('./src/sass/*.scss', ['sass']);
-    var w_jade = gulp.watch('./src/jade/**/*.jade', ['jade']);
+    var w_pug = gulp.watch('./src/pug/**/*.pug', ['pug']);
     var w_uglify = gulp.watch('./src/js/*.js', ['compress']);
     var w_image = gulp.watch('./dest/**/*.+(jpg|jpeg|png|gif|svg)', ['imagemin']);
 
@@ -118,8 +119,8 @@ browserSync.init({
         console.log('CSS File ' + event.path + ' was ' + event.type + ', running task sass...');
     });
 
-    w_jade.on('change', function(event){
-        console.log('Jade File ' + event.path + ' was ' + event.type + ', running task jade...');
+    w_pug.on('change', function(event){
+        console.log('pug File ' + event.path + ' was ' + event.type + ', running task pug...');
     });
 
     w_uglify.on('change', function(event){
